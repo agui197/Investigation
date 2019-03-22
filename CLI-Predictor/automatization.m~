@@ -1,4 +1,0 @@
-clear all;close all;clc
-
-%% Data 
-data=xlsread('Data_CLI.xlsx','Data','A1:C252');
