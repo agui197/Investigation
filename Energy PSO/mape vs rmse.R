@@ -4,7 +4,7 @@
 # Determinación de si reducir RMSE (en MCO) implica reducir
 #                                   MAPE o no lo implica
 # ------------------------------------------------------
-
+# install.packages("ggplot2", dep = TRUE) para evitar un warning
 # Paqueterias necesarias y limpiar el entorno####
 rm(list=ls())
 setwd("C:/Users/behep/OneDrive - ITESO/PhD")
@@ -54,9 +54,10 @@ mape_recta_nlm <- function(X){
   B <- X[2]
   y_hat <- M%*%t(x)+B%*%t(rep(1,n)) 
   ym <- rep(1,length(M))%*%t(y)
+  temp<-rowSums(abs((ym-y_hat)/
+                ym))
   
-  mape_error <- 1/n*rowSums(abs((ym-y_hat)/
-                                  ym))
+  mape_error <- 1/n*temp
   return(mape_error)
 }
 
@@ -97,7 +98,9 @@ for (i in 1:n){
   l <- rectaFun(var = var)
   y<-l[,1]
   x<-l[,2]
-  ans<-montecarloFun()
+  tryCatch({
+    ans<-montecarloFun()
+  }, error=function(e){cat("ERROR :",conditionMessage(e), "\n")})
   montecarlo_nlm[i]<-ans[3]
   valores[[i]]<-data.frame(ans[1:2])
   mco_sim_mape[[i]]<-mco(x,y)
